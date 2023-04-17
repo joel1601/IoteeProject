@@ -34,7 +34,8 @@ export default function App() {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="Classification" />
           <YAxis />
-       
+          <Tooltip />
+          <Legend />
           <Bar dataKey="DebitCredit" fill="#8884d8" />
           
         </BarChart>

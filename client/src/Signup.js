@@ -66,7 +66,7 @@ export default function SignUp() {
     onSubmit: async (values, { setSubmitting }) => {
       alert(JSON.stringify(values, null, 2));
       let response = await axios.post(
-        "http://localhost:8082/api/signups/create",
+        "http://localhost:8080/api/signups/create",
         formik.values
       );
       console.log(response);

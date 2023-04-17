@@ -50,7 +50,7 @@ export default function Login() {
     onSubmit: async (values, { setSubmitting }) => {
       alert(JSON.stringify(values, null, 2));
       let response = await axios.post(
-        "http://localhost:8082/api/signups/login",
+        "http://localhost:8080/api/signups/login",
           formik.values
       )
         .then(res =>{

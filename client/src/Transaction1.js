@@ -8,82 +8,59 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useState, useEffect } from 'react';
 import axios from 'axios'
-import { Grid } from "@mui/material";
-// import TextField from '@mui/material/TextField';
-// import moment from "moment";
-// import Box from '@mui/material/Box';
 import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
+import 'react-date-range/dist/theme/default.css'; // theme css fil
 import { DateRangePicker } from 'react-date-range';
+
 export default function Transaction1() {
-    // const [currentDate, setCurrentDate] = useState( moment().format("YYYY-MM-DD"));
     const [data, setData] = useState([]);
+    const [Alldata, setAllData] = useState([]);
     const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date())
     useEffect(() => {
         axios
-            .get("http://localhost:8082/api/transaction/")
+            .get("http://localhost:8080/api/transaction/")
             .then((res) => {
                 setData(res.data);
+                setAllData(res.data)
             })
             .catch((err) => console.log(err));
     }, []);
-    const filtetData = (datas) =>{
-        const ranges = handleSelect
-        const newData = datas.filter(data => {
-            data.Dateoftxn >= ranges.selection.startDate && data.Dateoftxn <= ranges.selection.endDate
+    // const filtetData = (datas, ranges) =>{
+    //     const newData = datas.filter(data => {
+    //        return data.Dateoftxn 
+    //     })
+    //     setData(newData) 
+    // }
+    // const handleSelect = (ranges) => {
+    //     console.log(ranges)
+    //     return ranges
+    // };
+  
+    const handleSelect = (dates) => {
+        let filtered=Alldata.filter((data)=>{
+            let datadate=new Date(data.Dateoftxn);
+            return (datadate >=dates.selection.startDate && datadate <= dates.selection.endDate);
         })
-        setData(newData) 
+        setStartDate(dates.selection.startDate);
+        console.log(dates.selection.startDate)
+        setEndDate(dates.selection.endDate)
+        console.log(dates.selection.endDate)
+        setData(filtered)
     }
-    const handleSelect = (ranges) => {
-        return ranges
-    };
-
     const selectionRange = {
         startDate: startDate,
         endDate: endDate,
         key: 'selection',
-    };
+    }
+
+
     return (
-        <>
-            {/* this grid give two box right yes, we need to get value of both input */}
-            <Grid item pt={15}>
-                <DateRangePicker
-                    ranges={[selectionRange]}
-                    onChange={()=>{
-                        filtetData(data)
-                        {this.handleSelect}}}
-                /></Grid>
-            {/* <Box pt={3} pb={3} px={3}>
-              <Grid container spacing={3} mb={3}>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    label="Search"
-                    name="search"
-                  />
-                </Grid>
-                <Grid item xs={4} sm={2}>
-                  <TextField
-                    // label="From"
-                    name="from"
-                    inputProps={{ type: "date", min: "1970-01-01", max: currentDate}}
-                    // value={x.from}
-                    // onChange={(e) => handleInputChange(e, i)}
-                    // {...formik.getFieldProps("from")}
-                  ></TextField>
-                </Grid>
-                <Grid item xs={4} sm={2}>
-                  <TextField
-                    // label="To"
-                    name="to"
-                    inputProps={{ type: "date", min:"1970-01-01", max: currentDate }}
-                    // value={x.to}
-                    // onChange={(e) => handleInputChange(e, i)}
-                    // {...formik.getFieldProps("to")}
-                  ></TextField>
-                </Grid>
-                </Grid>
-                </Box> */}
+        <React.Fragment>
+            <DateRangePicker
+                ranges={[selectionRange]}
+                onChange={handleSelect}
+            />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -101,7 +78,7 @@ export default function Transaction1() {
                     <TableBody>
                         {data.map((data) => (
                             <TableRow
-                                //   key={data.name}
+                                  key={data.Slno}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
@@ -119,6 +96,6 @@ export default function Transaction1() {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </>
+        </React.Fragment>
     );
 }
